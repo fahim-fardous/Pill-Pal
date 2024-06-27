@@ -65,6 +65,7 @@ fun PillListScreenSkeleton() {
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
             Spacer(modifier = Modifier.height(32.dp))
             Search(
                 query = "",
