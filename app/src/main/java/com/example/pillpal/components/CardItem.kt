@@ -27,7 +27,11 @@ import com.example.pillpal.R
 import com.example.pillpal.ui.theme.PillPalTheme
 
 @Composable
-fun CardItem() {
+fun CardItem(
+    pillName: String,
+    time: String,
+    completed: Boolean,
+) {
     Row(
         modifier =
             Modifier
@@ -42,12 +46,12 @@ fun CardItem() {
             modifier = Modifier.padding(horizontal = 8.dp).size(28.dp),
         )
         Column {
-            Text(text = "Pill Name", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            Text(text = pillName, fontSize = 14.sp, fontWeight = FontWeight.Medium)
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = "10:00 AM", fontSize = 10.sp, modifier = Modifier.padding(end = 2.dp))
+                Text(text = time, fontSize = 10.sp, modifier = Modifier.padding(end = 2.dp))
                 Box(
                     modifier =
                         Modifier
@@ -55,7 +59,7 @@ fun CardItem() {
                             .background(color = Color(0xFF9A9A9A), shape = CircleShape),
                 )
                 Text(
-                    text = "Completed",
+                    text = if (completed) "Completed" else "Skipped",
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 2.dp),
                 )
@@ -71,7 +75,11 @@ fun CardItem() {
 private fun CardItemPreview() {
     PillPalTheme {
         Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-            CardItem()
+            CardItem(
+                pillName = "Napa extra",
+                time = "11:34",
+                completed = true,
+            )
         }
     }
 }
