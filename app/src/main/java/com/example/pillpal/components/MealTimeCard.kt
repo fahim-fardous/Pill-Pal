@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.pillpal.R
 
 @Composable
-fun FoodCard(
+fun MealTimeCard(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     icon: Int,
@@ -61,7 +57,7 @@ fun FoodCard(
 @Preview(showBackground = true)
 @Composable
 private fun FoodCardPreview() {
-    FoodCard(
+    MealTimeCard(
         icon = R.drawable.after_food,
         selectedColor = Color.Black,
         unSelectedColor = Color.Gray,

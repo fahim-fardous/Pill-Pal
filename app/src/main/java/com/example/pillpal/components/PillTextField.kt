@@ -8,7 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,10 +28,12 @@ import com.example.pillpal.ui.theme.PillPalTheme
 
 @Composable
 fun PillTextField(
-    value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var name by remember {
+        mutableStateOf("")
+    }
     Box(
         modifier =
             Modifier
@@ -48,8 +55,11 @@ fun PillTextField(
             )
 
             BasicTextField(
-                value = value,
-                onValueChange = { onValueChange("Fahim") },
+                value = name,
+                onValueChange = {
+                    name = it
+                    onValueChange(it)
+                },
                 modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 singleLine = true,
                 textStyle =
@@ -57,12 +67,25 @@ fun PillTextField(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                     ),
+                decorationBox = { innerTextField ->
+                    Box(modifier = Modifier.fillMaxWidth().align(Alignment.CenterVertically)) {
+                        if (name.isEmpty()) {
+                            Text(
+                                text = "Ex. : Napa Extra",
+                                color = Color(0xFF9A9A9A),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+                        innerTextField()
+                    }
+                },
             )
         }
     }
 }
 
-fun onValueChange(str:String):Unit{
+fun onValueChange(str: String) {
     println(str)
 }
 
@@ -70,6 +93,6 @@ fun onValueChange(str:String):Unit{
 @Composable
 private fun PillTextFieldPreview() {
     PillPalTheme {
-        PillTextField(value = "", onValueChange = {}, modifier = Modifier)
+        PillTextField(onValueChange = {}, modifier = Modifier)
     }
 }

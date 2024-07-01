@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -41,19 +40,21 @@ import com.example.pillpal.R
 
 @Composable
 fun DropDownField(
+    onValueChange: (String) -> Unit,
+    onTypeChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     icon: Int = R.drawable.pill,
-    type: List<String>,
+    typeList: List<String>,
 ) {
     var expanded by remember {
         mutableStateOf(false)
     }
 
-    var amountType by remember {
+    var amount by remember {
         mutableStateOf("")
     }
 
-    var num by remember {
+    var type by remember {
         mutableStateOf("")
     }
     Box(
@@ -75,8 +76,11 @@ fun DropDownField(
                 modifier = Modifier.size(28.dp).padding(start = 8.dp),
             )
             BasicTextField(
-                value = num,
-                onValueChange = { if(num.length<1)num = it },
+                value = amount,
+                onValueChange = {
+                    amount = it
+                    onValueChange(it)
+                },
                 modifier =
                     Modifier
                         .width(42.dp)
@@ -89,7 +93,19 @@ fun DropDownField(
                         fontSize = 14.sp,
                     ),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                decorationBox = { innerTextField ->
+
+                    if (amount.isEmpty()) {
+                        Text(
+                            text = "0",
+                            color = Color(0xFF9A9A9A),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 14.sp,
+                        )
+                    }
+                    innerTextField()
+                },
             )
             Row(
                 modifier =
@@ -101,8 +117,11 @@ fun DropDownField(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 BasicTextField(
-                    value = amountType,
-                    onValueChange = {},
+                    value = type,
+                    onValueChange = {
+                        type = it
+                        onTypeChange(it)
+                    },
                     modifier = Modifier.weight(1f),
                     readOnly = true,
                     textStyle =
@@ -113,6 +132,27 @@ fun DropDownField(
                             textAlign = TextAlign.Center,
                         ),
                     singleLine = true,
+                    decorationBox = { innerTextField ->
+                        if (type.isEmpty()) {
+                            if (typeList.first() == "Pills") {
+                                Text(
+                                    text = "Pills",
+                                    color = Color(0xFF9A9A9A),
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 14.sp,
+                                )
+                            } else {
+                                Text(
+                                    text = "Day",
+                                    color = Color(0xFF9A9A9A),
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 14.sp,
+                                )
+                            }
+
+                            innerTextField()
+                        }
+                    },
                 )
                 Icon(
                     Icons.Filled.ArrowDropDown,
@@ -125,7 +165,7 @@ fun DropDownField(
                 )
             }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = !expanded }) {
-                type.forEach {
+                typeList.forEach {
                     DropdownMenuItem(
                         text = {
                             Text(
@@ -139,7 +179,8 @@ fun DropDownField(
                             )
                         },
                         onClick = {
-                            amountType = it
+                            type = it
+                            onTypeChange(it)
                             expanded = !expanded
                         },
                     )
@@ -163,12 +204,16 @@ private fun DropdownFieldPreview() {
         DropDownField(
             icon = R.drawable.calendar_fill,
             modifier = Modifier.weight(1f),
-            type = emptyList(),
+            onValueChange = { },
+            onTypeChange = { },
+            typeList = listOf("Pills", "ml", "tbsp"),
         )
         DropDownField(
             icon = R.drawable.calendar_fill_2,
             modifier = Modifier.weight(1f),
-            type = emptyList(),
+            onValueChange = { },
+            onTypeChange = { },
+            typeList = listOf("Day", "Week", "Month"),
         )
     }
 }

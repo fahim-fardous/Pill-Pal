@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pillpal.components.CalendarDataSource
 import com.example.pillpal.components.CardItem
 import com.example.pillpal.components.PlanCard
 import com.example.pillpal.components.Search
@@ -53,8 +52,6 @@ private fun PillListScreenSkeletonPreviewDark() {
 
 @Composable
 fun PillListScreenSkeleton() {
-    val dataSource = CalendarDataSource()
-    val calendarUiModel = dataSource.getData(lastSelectedDate = dataSource.today)
     Scaffold {
         Column(
             modifier =

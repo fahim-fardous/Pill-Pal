@@ -1,6 +1,9 @@
 package com.example.pillpal.screens.pill.add
 
+import android.app.TimePickerDialog
+import android.icu.util.Calendar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,9 +20,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,9 +43,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pillpal.R
 import com.example.pillpal.components.DropDownField
-import com.example.pillpal.components.FoodCard
+import com.example.pillpal.components.MealTimeCard
 import com.example.pillpal.components.PillTextField
+import com.example.pillpal.components.TimePickerDialog
 import com.example.pillpal.ui.theme.PillPalTheme
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Composable
 fun PillAddScreen() {
@@ -52,6 +63,7 @@ private fun PillAddScreenSkeletonPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PillAddScreenSkeleton() {
     var selectedTime by remember {
@@ -59,6 +71,30 @@ fun PillAddScreenSkeleton() {
     }
     var time by remember {
         mutableStateOf("")
+    }
+
+    var pillAmount by remember {
+        mutableStateOf("")
+    }
+
+    var pillType by remember {
+        mutableStateOf("")
+    }
+
+    var interval by remember {
+        mutableStateOf("")
+    }
+
+    var intervalType by remember {
+        mutableStateOf("")
+    }
+
+    var pillName by remember {
+        mutableStateOf("")
+    }
+
+    var showTimePickerDialog by remember {
+        mutableStateOf(false)
     }
     Scaffold { innerPadding ->
         Column(
@@ -100,7 +136,11 @@ fun PillAddScreenSkeleton() {
                 fontWeight = FontWeight.Medium,
             )
 
-            PillTextField(value = "", onValueChange = { })
+            PillTextField(
+                onValueChange = {
+                    pillName = it
+                },
+            )
             Text(
                 text = "Amount & How long?",
                 modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
@@ -112,19 +152,23 @@ fun PillAddScreenSkeleton() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 DropDownField(
+                    onValueChange = { pillAmount = it },
+                    onTypeChange = { pillType = it },
                     icon = R.drawable.calendar_fill,
                     modifier =
                         Modifier
                             .weight(1f),
-                    type = listOf("Pills", "ml", "tbsp"),
+                    typeList = listOf("Pills", "ml", "tbsp"),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 DropDownField(
+                    onValueChange = { interval = it },
+                    onTypeChange = { intervalType = it },
                     icon = R.drawable.calendar_fill_2,
                     modifier =
                         Modifier
                             .weight(1f),
-                    type = listOf("Day", "Week", "Month"),
+                    typeList = listOf("Day", "Week", "Month"),
                 )
             }
             Text(
@@ -138,7 +182,7 @@ fun PillAddScreenSkeleton() {
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                FoodCard(
+                MealTimeCard(
                     modifier = Modifier.weight(1f),
                     isSelected = selectedTime == 0,
                     icon = R.drawable.before_food,
@@ -148,7 +192,7 @@ fun PillAddScreenSkeleton() {
                         selectedTime = 0
                     },
                 )
-                FoodCard(
+                MealTimeCard(
                     modifier = Modifier.weight(1f),
                     isSelected = selectedTime == 1,
                     icon = R.drawable.middle_of_food,
@@ -158,7 +202,7 @@ fun PillAddScreenSkeleton() {
                         selectedTime = 1
                     },
                 )
-                FoodCard(
+                MealTimeCard(
                     modifier = Modifier.weight(1f),
                     isSelected = selectedTime == 2,
                     icon = R.drawable.after_food,
@@ -207,7 +251,10 @@ fun PillAddScreenSkeleton() {
                     modifier =
                         Modifier
                             .background(color = Color(0xFFEEFBF3), shape = RoundedCornerShape(16.dp))
-                            .padding(16.dp),
+                            .padding(16.dp)
+                            .clickable {
+                                showTimePickerDialog = true
+                            },
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(Icons.Filled.Add, contentDescription = "add", tint = Color(0xFF1BD15D))
@@ -233,4 +280,54 @@ fun PillAddScreenSkeleton() {
             }
         }
     }
+
+    // -----------------------------------------------------------------------------------
+    // Dialog
+    // -----------------------------------------------------------------------------------
+
+    if (showTimePickerDialog) {
+        val calendar = Calendar.getInstance()
+        val timePickerState =
+            rememberTimePickerState(
+                initialHour = calendar.get(Calendar.HOUR_OF_DAY),
+                initialMinute = calendar.get(Calendar.MINUTE),
+                is24Hour = false,
+            )
+        TimePickerDialog(
+            onDismissRequest = {
+                showTimePickerDialog = false
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    val hour = timePickerState.hour
+                    val minute = timePickerState.minute
+                    time = convert24HourTo12Hour("$hour:$minute")
+                    showTimePickerDialog = false
+                }) {
+                    Text(text = "Ok")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showTimePickerDialog = false
+                }) {
+                    Text(text = "Cancel")
+                }
+            },
+        ) {
+            TimePicker(state = timePickerState)
+        }
+    }
+}
+
+fun convert24HourTo12Hour(time24: String): String {
+    // Define the input and output date formats
+    val inputFormat = SimpleDateFormat("HH:mm")
+    val outputFormat = SimpleDateFormat("hh:mm a")
+
+    // Parse the input time string to a Date object
+    val date: Date? = inputFormat.parse(time24)
+
+    // Format the Date object to the desired output format
+    return outputFormat.format(date)
 }
