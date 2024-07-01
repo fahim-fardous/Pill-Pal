@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pillpal.components.CalendarDataSource
 import com.example.pillpal.components.CardItem
 import com.example.pillpal.components.PlanCard
 import com.example.pillpal.components.Search
@@ -43,6 +41,7 @@ private fun PillListScreenSkeletonPreview() {
         PillListScreenSkeleton()
     }
 }
+
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun PillListScreenSkeletonPreviewDark() {
@@ -53,19 +52,16 @@ private fun PillListScreenSkeletonPreviewDark() {
 
 @Composable
 fun PillListScreenSkeleton() {
-    val dataSource = CalendarDataSource()
-    val calendarUiModel = dataSource.getData(lastSelectedDate = dataSource.today)
     Scaffold {
         Column(
             modifier =
-            Modifier
-                .padding(it)
-                .padding(top = 16.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                Modifier
+                    .padding(it)
+                    .padding(top = 16.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
             Spacer(modifier = Modifier.height(32.dp))
             Search(
                 query = "",
@@ -99,7 +95,11 @@ fun PillListScreenSkeleton() {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     items(10) {
-                        CardItem()
+                        CardItem(
+                            pillName = "Napa extra",
+                            "01:40 PM",
+                            completed = true,
+                        )
                     }
                 }
             }
