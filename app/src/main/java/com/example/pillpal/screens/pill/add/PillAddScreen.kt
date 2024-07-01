@@ -2,6 +2,7 @@ package com.example.pillpal.screens.pill.add
 
 import android.app.TimePickerDialog
 import android.icu.util.Calendar
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +23,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,6 +67,7 @@ private fun PillAddScreenSkeletonPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PillAddScreenSkeleton() {
+    val context = LocalContext.current
     var selectedTime by remember {
         mutableStateOf(-1)
     }
@@ -130,7 +132,7 @@ fun PillAddScreenSkeleton() {
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = "Pills name",
+                text = "Pills Name",
                 modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
@@ -260,13 +262,13 @@ fun PillAddScreenSkeleton() {
                     Icon(Icons.Filled.Add, contentDescription = "add", tint = Color(0xFF1BD15D))
                 }
             }
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
             Box(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = 32.dp)
+                        .padding(top = 16.dp)
                         .background(color = Color(0xFF1BD15D), shape = RoundedCornerShape(16.dp))
                         .padding(16.dp),
                 contentAlignment = Alignment.Center,
@@ -301,6 +303,9 @@ fun PillAddScreenSkeleton() {
                 TextButton(onClick = {
                     val hour = timePickerState.hour
                     val minute = timePickerState.minute
+                    val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+                    val currentMinute = calendar.get(Calendar.MINUTE)
+
                     time = convert24HourTo12Hour("$hour:$minute")
                     showTimePickerDialog = false
                 }) {
