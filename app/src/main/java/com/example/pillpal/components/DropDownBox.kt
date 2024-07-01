@@ -78,8 +78,10 @@ fun DropDownField(
             BasicTextField(
                 value = amount,
                 onValueChange = {
-                    amount = it
-                    onValueChange(it)
+                    if(it.length<=2){
+                        amount = it
+                        onValueChange(it)
+                    }
                 },
                 modifier =
                     Modifier
@@ -149,9 +151,8 @@ fun DropDownField(
                                     fontSize = 14.sp,
                                 )
                             }
-
-                            innerTextField()
                         }
+                        innerTextField()
                     },
                 )
                 Icon(
