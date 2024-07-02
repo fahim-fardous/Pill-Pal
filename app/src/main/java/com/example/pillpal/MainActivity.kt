@@ -11,7 +11,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.pillpal.screens.pill.add.PillAddScreen
 import com.example.pillpal.screens.pill.list.PillListScreen
 import com.example.pillpal.ui.theme.PillPalTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
