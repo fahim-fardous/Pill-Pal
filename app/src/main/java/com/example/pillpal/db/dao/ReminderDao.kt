@@ -10,7 +10,7 @@ import com.example.pillpal.models.Reminder
 interface ReminderDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(reminder: Reminder)
+    suspend fun insertReminder(reminder: Reminder):Long
 
     @Query("SELECT * FROM reminders")
     suspend fun getAllReminders(): List<Reminder>

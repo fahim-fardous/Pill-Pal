@@ -29,6 +29,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,18 +43,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pillpal.R
 import com.example.pillpal.components.DropDownField
 import com.example.pillpal.components.MealTimeCard
 import com.example.pillpal.components.PillTextField
 import com.example.pillpal.components.TimePickerDialog
+import com.example.pillpal.models.Reminder
 import com.example.pillpal.ui.theme.PillPalTheme
 import java.text.SimpleDateFormat
 import java.util.Date
 
 @Composable
 fun PillAddScreen() {
-    PillAddScreenSkeleton()
+    val viewModel: PillAddViewModel = hiltViewModel()
+    val showMessage by viewModel.showMessage.collectAsState()
+    showMessage?.let {
+        Toast.makeText(LocalContext.current, it, Toast.LENGTH_SHORT).show()
+    }
+    PillAddScreenSkeleton(
+        addReminder = { pillName, pillAmount, pillType, interval, intervalType, foodTiming, time ->
+            viewModel.addReminder(
+                Reminder(
+                    pillName = pillName,
+                    pillAmount = pillAmount,
+                    pillType = pillType,
+                    interval = interval,
+                    intervalType = intervalType,
+                    foodTiming = foodTiming,
+                    time = time,
+                ),
+            )
+        },
+    )
 }
 
 @Preview
@@ -66,7 +89,7 @@ private fun PillAddScreenSkeletonPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PillAddScreenSkeleton() {
+fun PillAddScreenSkeleton(addReminder: (String, Int, String, Int, String, Int, String) -> Unit = { _, _, _, _, _, _, _ -> }) {
     val context = LocalContext.current
     var selectedTime by remember {
         mutableStateOf(-1)
@@ -101,19 +124,19 @@ fun PillAddScreenSkeleton() {
     Scaffold { innerPadding ->
         Column(
             modifier =
-                Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .padding(horizontal = 32.dp, vertical = 48.dp),
+            Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(horizontal = 32.dp, vertical = 48.dp),
         ) {
             Box(
                 modifier =
-                    Modifier
-                        .size(40.dp)
-                        .background(
-                            color = Color(0xFFEEEEEC),
-                            shape = RoundedCornerShape(16.dp),
-                        ),
+                Modifier
+                    .size(40.dp)
+                    .background(
+                        color = Color(0xFFEEEEEC),
+                        shape = RoundedCornerShape(16.dp),
+                    ),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -270,7 +293,18 @@ fun PillAddScreenSkeleton() {
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                         .background(color = Color(0xFF1BD15D), shape = RoundedCornerShape(16.dp))
-                        .padding(16.dp),
+                        .padding(16.dp)
+                        .clickable {
+                            addReminder(
+                                pillName,
+                                pillAmount.toInt(),
+                                pillType,
+                                interval.toInt(),
+                                intervalType,
+                                selectedTime,
+                                time,
+                            )
+                        },
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
