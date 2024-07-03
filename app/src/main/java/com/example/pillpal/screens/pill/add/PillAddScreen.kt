@@ -29,6 +29,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,8 +60,12 @@ import java.util.Date
 fun PillAddScreen() {
     val viewModel: PillAddViewModel = hiltViewModel()
     val showMessage by viewModel.showMessage.collectAsState()
-    showMessage?.let {
-        Toast.makeText(LocalContext.current, it, Toast.LENGTH_SHORT).show()
+    val context = LocalContext.current
+    showMessage?.let { message ->
+        LaunchedEffect(message) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearMessage() // Clear the message after showing the Toast
+        }
     }
     PillAddScreenSkeleton(
         addReminder = { pillName, pillAmount, pillType, interval, intervalType, foodTiming, time ->
@@ -90,7 +95,6 @@ private fun PillAddScreenSkeletonPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PillAddScreenSkeleton(addReminder: (String, Int, String, Int, String, Int, String) -> Unit = { _, _, _, _, _, _, _ -> }) {
-    val context = LocalContext.current
     var selectedTime by remember {
         mutableStateOf(-1)
     }

@@ -30,4 +30,8 @@ class PillAddViewModel
                     _showMessage.value = "Reminder added successfully"
                 }
             }
+
+    fun clearMessage() {
+        _showMessage.value = null
+    }
     }
