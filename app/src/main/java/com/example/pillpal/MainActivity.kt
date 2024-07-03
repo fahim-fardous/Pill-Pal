@@ -3,13 +3,11 @@ package com.example.pillpal
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.pillpal.screens.pill.add.PillAddScreen
-import com.example.pillpal.screens.pill.list.PillListScreen
+import com.example.pillpal.screens.reminder.add.PillAddScreen
 import com.example.pillpal.ui.theme.PillPalTheme
 import dagger.hilt.android.AndroidEntryPoint
 

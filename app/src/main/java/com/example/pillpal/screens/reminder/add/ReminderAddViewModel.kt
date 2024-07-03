@@ -1,4 +1,4 @@
-package com.example.pillpal.screens.pill.add
+package com.example.pillpal.screens.reminder.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PillAddViewModel
+class ReminderAddViewModel
     @Inject
     constructor(
         private val repository: ReminderRepository,

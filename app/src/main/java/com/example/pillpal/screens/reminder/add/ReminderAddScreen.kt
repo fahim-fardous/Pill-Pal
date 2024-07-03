@@ -1,6 +1,5 @@
-package com.example.pillpal.screens.pill.add
+package com.example.pillpal.screens.reminder.add
 
-import android.app.TimePickerDialog
 import android.icu.util.Calendar
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -20,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -45,7 +43,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pillpal.R
 import com.example.pillpal.components.DropDownField
 import com.example.pillpal.components.MealTimeCard
@@ -57,8 +54,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 @Composable
-fun PillAddScreen() {
-    val viewModel: PillAddViewModel = hiltViewModel()
+fun ReminderAddScreen(
+    viewModel: ReminderAddViewModel,
+    goBack:()->Unit
+) {
     val showMessage by viewModel.showMessage.collectAsState()
     val context = LocalContext.current
     showMessage?.let { message ->
@@ -67,7 +66,7 @@ fun PillAddScreen() {
             viewModel.clearMessage() // Clear the message after showing the Toast
         }
     }
-    PillAddScreenSkeleton(
+    ReminderAddScreenSkeleton(
         addReminder = { pillName, pillAmount, pillType, interval, intervalType, foodTiming, time ->
             viewModel.addReminder(
                 Reminder(
@@ -81,6 +80,7 @@ fun PillAddScreen() {
                 ),
             )
         },
+        goBack = goBack
     )
 }
 
@@ -88,13 +88,14 @@ fun PillAddScreen() {
 @Composable
 private fun PillAddScreenSkeletonPreview() {
     PillPalTheme {
-        PillAddScreenSkeleton()
+        ReminderAddScreenSkeleton()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PillAddScreenSkeleton(addReminder: (String, Int, String, Int, String, Int, String) -> Unit = { _, _, _, _, _, _, _ -> }) {
+fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, Int, String) -> Unit = { _, _, _, _, _, _, _ -> },
+                              goBack: () -> Unit = {}) {
     var selectedTime by remember {
         mutableStateOf(-1)
     }
@@ -140,7 +141,8 @@ fun PillAddScreenSkeleton(addReminder: (String, Int, String, Int, String, Int, S
                     .background(
                         color = Color(0xFFEEEEEC),
                         shape = RoundedCornerShape(16.dp),
-                    ),
+                    ).
+                clickable { goBack() },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

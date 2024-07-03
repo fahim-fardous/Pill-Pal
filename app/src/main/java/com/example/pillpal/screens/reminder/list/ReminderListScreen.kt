@@ -1,4 +1,4 @@
-package com.example.pillpal.screens.pill.list
+package com.example.pillpal.screens.reminder.list
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -30,15 +30,18 @@ import com.example.pillpal.components.Search
 import com.example.pillpal.ui.theme.PillPalTheme
 
 @Composable
-fun PillListScreen() {
-    PillListScreenSkeleton()
+fun ReminderListScreen(
+    viewModel:ReminderListViewModel,
+    gotoAddReminder: () -> Unit,
+) {
+    ReminderListScreenSkeleton()
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun PillListScreenSkeletonPreview() {
+private fun ReminderListScreenSkeletonPreview() {
     PillPalTheme {
-        PillListScreenSkeleton()
+        ReminderListScreenSkeleton()
     }
 }
 
@@ -46,12 +49,12 @@ private fun PillListScreenSkeletonPreview() {
 @Composable
 private fun PillListScreenSkeletonPreviewDark() {
     PillPalTheme {
-        PillListScreenSkeleton()
+        ReminderListScreenSkeleton()
     }
 }
 
 @Composable
-fun PillListScreenSkeleton() {
+fun ReminderListScreenSkeleton() {
     Scaffold {
         Column(
             modifier =
