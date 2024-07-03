@@ -7,7 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.pillpal.screens.reminder.add.PillAddScreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.pillpal.screens.reminder.list.ReminderListScreen
+import com.example.pillpal.screens.reminder.list.ReminderListViewModel
 import com.example.pillpal.ui.theme.PillPalTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,7 +20,11 @@ class MainActivity : ComponentActivity() {
         //enableEdgeToEdge()
         setContent {
             PillPalTheme {
-                PillAddScreen()
+                val viewModel:ReminderListViewModel = hiltViewModel()
+                ReminderListScreen(
+                    viewModel = viewModel,
+                    gotoAddReminder = {}
+                )
             }
         }
     }
@@ -39,6 +45,7 @@ fun Greeting(
 @Composable
 fun GreetingPreview() {
     PillPalTheme {
-        PillAddScreen()
+        val viewModel:ReminderListViewModel = hiltViewModel()
+        ReminderListScreen(viewModel = viewModel, gotoAddReminder = {})
     }
 }
