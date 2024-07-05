@@ -42,7 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pillpal.R
 import com.example.pillpal.components.DropDownField
 import com.example.pillpal.components.MealTimeCard
@@ -51,20 +50,24 @@ import com.example.pillpal.components.TimePickerDialog
 import com.example.pillpal.models.Reminder
 import com.example.pillpal.ui.theme.PillPalTheme
 import com.example.pillpal.ui.theme.appColor
+import com.example.pillpal.utils.Extensions
 import java.text.SimpleDateFormat
 import java.util.Date
 
 @Composable
 fun ReminderAddScreen(
     viewModel: ReminderAddViewModel,
-    goBack:()->Unit
+    goBack: () -> Unit,
 ) {
     val showMessage by viewModel.showMessage.collectAsState()
     val context = LocalContext.current
     showMessage?.let { message ->
         LaunchedEffect(message) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            viewModel.clearMessage() // Clear the message after showing the Toast
+            if(message == "Reminder added successfully"){
+                viewModel.clearMessage()
+                goBack()
+            }
         }
     }
     ReminderAddScreenSkeleton(
@@ -78,10 +81,21 @@ fun ReminderAddScreen(
                     intervalType = intervalType,
                     foodTiming = foodTiming,
                     time = time,
+                    startDate = Date(),
+                    endDate = Extensions.getEndDate(interval),
+                    duration =
+                        when (intervalType) {
+                            "Month" -> interval * (Extensions.getDaysOfMonth(interval))
+                            "Week" -> interval * 7
+                            else -> {
+                                interval
+                            }
+                        },
+                    status = "Pending",
                 ),
             )
         },
-        goBack = goBack
+        goBack = goBack,
     )
 }
 
@@ -95,9 +109,11 @@ private fun PillAddScreenSkeletonPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, Int, String) -> Unit = { _, _, _, _, _, _, _ -> },
-                              goBack: () -> Unit = {}) {
-    var selectedTime by remember {
+fun ReminderAddScreenSkeleton(
+    addReminder: (String, Int, String, Int, String, Int, String) -> Unit = { _, _, _, _, _, _, _ -> },
+    goBack: () -> Unit = {},
+) {
+    var mealTime by remember {
         mutableStateOf(-1)
     }
     var time by remember {
@@ -130,20 +146,19 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
     Scaffold { innerPadding ->
         Column(
             modifier =
-            Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(horizontal = 32.dp, vertical = 48.dp),
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(horizontal = 32.dp, vertical = 48.dp),
         ) {
             Box(
                 modifier =
-                Modifier
-                    .size(40.dp)
-                    .background(
-                        color = Color(0xFFEEEEEC),
-                        shape = RoundedCornerShape(16.dp),
-                    ).
-                clickable { goBack() },
+                    Modifier
+                        .size(40.dp)
+                        .background(
+                            color = Color(0xFFEEEEEC),
+                            shape = RoundedCornerShape(16.dp),
+                        ).clickable { goBack() },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -216,32 +231,32 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
             ) {
                 MealTimeCard(
                     modifier = Modifier.weight(1f),
-                    isSelected = selectedTime == 0,
+                    isSelected = mealTime == 0,
                     icon = R.drawable.before_food,
                     selectedColor = appColor,
                     unSelectedColor = Color(0xFFF8F8F6),
                     onClick = {
-                        selectedTime = 0
+                        mealTime = 0
                     },
                 )
                 MealTimeCard(
                     modifier = Modifier.weight(1f),
-                    isSelected = selectedTime == 1,
+                    isSelected = mealTime == 1,
                     icon = R.drawable.middle_of_food,
                     selectedColor = appColor,
                     unSelectedColor = Color(0xFFF8F8F6),
                     onClick = {
-                        selectedTime = 1
+                        mealTime = 1
                     },
                 )
                 MealTimeCard(
                     modifier = Modifier.weight(1f),
-                    isSelected = selectedTime == 2,
+                    isSelected = mealTime == 2,
                     icon = R.drawable.after_food,
                     selectedColor = appColor,
                     unSelectedColor = Color(0xFFF8F8F6),
                     onClick = {
-                        selectedTime = 2
+                        mealTime = 2
                     },
                 )
             }
@@ -308,7 +323,7 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
                                 pillType,
                                 interval.toInt(),
                                 intervalType,
-                                selectedTime,
+                                mealTime,
                                 time,
                             )
                         },
@@ -319,9 +334,6 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
                     color = Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.clickable {
-                        goBack()
-                    }
                 )
             }
         }

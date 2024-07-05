@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.pillpal.models.Reminder
+import java.util.Date
 
 @Dao
 interface ReminderDao {
@@ -14,6 +15,10 @@ interface ReminderDao {
 
     @Query("SELECT * FROM reminders")
     suspend fun getAllReminders(): List<Reminder>
+
+    // Get current day's reminders
+    @Query("SELECT * FROM reminders WHERE startDate<:currentDay LIMIT 1")
+    suspend fun getTodayReminders(currentDay: Date):List<Reminder>
 
 
 }

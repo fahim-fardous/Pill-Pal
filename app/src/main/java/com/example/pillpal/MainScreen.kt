@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    Surface(onClick = { /*TODO*/ }) {
+    Surface {
         MainNavHost(
             navController = navController
         )
