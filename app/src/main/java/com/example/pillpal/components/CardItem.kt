@@ -30,7 +30,7 @@ import com.example.pillpal.ui.theme.PillPalTheme
 fun CardItem(
     pillName: String,
     time: String,
-    completed: Boolean,
+    status: String,
 ) {
     Row(
         modifier =
@@ -59,7 +59,7 @@ fun CardItem(
                             .background(color = Color(0xFF9A9A9A), shape = CircleShape),
                 )
                 Text(
-                    text = if (completed) "Completed" else "Skipped",
+                    text = status,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(start = 2.dp),
                 )
@@ -78,7 +78,7 @@ private fun CardItemPreview() {
             CardItem(
                 pillName = "Napa extra",
                 time = "11:34",
-                completed = true,
+                status = "Pending",
             )
         }
     }

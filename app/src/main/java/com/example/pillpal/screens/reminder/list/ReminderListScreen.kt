@@ -40,7 +40,10 @@ import com.example.pillpal.models.Reminder
 import com.example.pillpal.ui.theme.PillPalTheme
 import com.example.pillpal.ui.theme.appColor
 import java.text.SimpleDateFormat
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 @Composable
@@ -69,7 +72,7 @@ private fun ReminderListScreenSkeletonPreview() {
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun PillListScreenSkeletonPreviewDark() {
+private fun ReminderListScreenPreviewDark() {
     PillPalTheme {
         ReminderListScreenSkeleton()
     }
@@ -84,26 +87,28 @@ fun ReminderListScreenSkeleton(
     LaunchedEffect(Unit) {
         getReminders()
     }
-    Scaffold(floatingActionButtonPosition = FabPosition.End, floatingActionButton = {
-        FloatingActionButton(onClick = { /*TODO*/ }, containerColor = appColor) {
-            Icon(
-                Icons.Filled.Add,
-                contentDescription = "Go to add",
-                tint = Color.White,
-                modifier =
-                    Modifier.clickable {
-                        gotoAddReminder()
-                    },
-            )
+    Scaffold(
+        floatingActionButtonPosition = FabPosition.End,
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    gotoAddReminder()
+                },
+                containerColor = appColor
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "Go to add",
+                    tint = Color.White
+                )
+            }
         }
-    }) {
+    ) {
         Column(
-            modifier =
-                Modifier
-                    .padding(it)
-                    .padding(top = 16.dp)
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+            modifier = Modifier
+                .padding(it)
+                .padding(top = 16.dp)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(32.dp))
@@ -125,10 +130,9 @@ fun ReminderListScreenSkeleton(
                 totalPill = reminders.size,
             )
             Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
             ) {
                 Text(
                     text = "Daily Review",
@@ -146,7 +150,7 @@ fun ReminderListScreenSkeleton(
                         CardItem(
                             pillName = reminder.pillName,
                             time = reminder.time,
-                            completed = getCurrentTime(reminder.time),
+                            status = if (reminder.status != "Completed") getCurrentTime(reminder.time) else "Completed",
                         )
                     }
                 }
@@ -155,9 +159,14 @@ fun ReminderListScreenSkeleton(
     }
 }
 
-fun getCurrentTime(reminderTime: String): Boolean {
-    val currentTime = Calendar.getInstance().time
-    val simpleFormatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
-    val setTime = simpleFormatter.parse(reminderTime)
-    return currentTime.before(setTime)
+
+fun getCurrentTime(reminderTime: String): String {
+    val formatter = DateTimeFormatter.ofPattern("hh:mm a")
+    val setTime = LocalTime.parse(reminderTime, formatter)
+    val currentTime = LocalTime.parse(LocalTime.now().format(formatter),formatter)
+    if(currentTime.isBefore(setTime)){
+        return "Pending"
+    }
+    return "Skipped"
+
 }
