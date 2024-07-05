@@ -20,25 +20,10 @@ class MainActivity : ComponentActivity() {
         //enableEdgeToEdge()
         setContent {
             PillPalTheme {
-                val viewModel:ReminderListViewModel = hiltViewModel()
-                ReminderListScreen(
-                    viewModel = viewModel,
-                    gotoAddReminder = {}
-                )
+                MainScreen()
             }
         }
     }
-}
-
-@Composable
-fun Greeting(
-    name: String,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier,
-    )
 }
 
 @Preview(showBackground = true)

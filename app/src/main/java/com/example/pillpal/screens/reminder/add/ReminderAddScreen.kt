@@ -50,6 +50,7 @@ import com.example.pillpal.components.PillTextField
 import com.example.pillpal.components.TimePickerDialog
 import com.example.pillpal.models.Reminder
 import com.example.pillpal.ui.theme.PillPalTheme
+import com.example.pillpal.ui.theme.appColor
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -217,7 +218,7 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
                     modifier = Modifier.weight(1f),
                     isSelected = selectedTime == 0,
                     icon = R.drawable.before_food,
-                    selectedColor = Color(0xFF1BD15D),
+                    selectedColor = appColor,
                     unSelectedColor = Color(0xFFF8F8F6),
                     onClick = {
                         selectedTime = 0
@@ -227,7 +228,7 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
                     modifier = Modifier.weight(1f),
                     isSelected = selectedTime == 1,
                     icon = R.drawable.middle_of_food,
-                    selectedColor = Color(0xFF1BD15D),
+                    selectedColor = appColor,
                     unSelectedColor = Color(0xFFF8F8F6),
                     onClick = {
                         selectedTime = 1
@@ -237,7 +238,7 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
                     modifier = Modifier.weight(1f),
                     isSelected = selectedTime == 2,
                     icon = R.drawable.after_food,
-                    selectedColor = Color(0xFF1BD15D),
+                    selectedColor = appColor,
                     unSelectedColor = Color(0xFFF8F8F6),
                     onClick = {
                         selectedTime = 2
@@ -281,14 +282,14 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
                 Box(
                     modifier =
                         Modifier
-                            .background(color = Color(0xFFEEFBF3), shape = RoundedCornerShape(16.dp))
+                            .background(color = Color(0xFFD6E3F7), shape = RoundedCornerShape(16.dp))
                             .padding(16.dp)
                             .clickable {
                                 showTimePickerDialog = true
                             },
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Filled.Add, contentDescription = "add", tint = Color(0xFF1BD15D))
+                    Icon(Icons.Filled.Add, contentDescription = "add", tint = appColor)
                 }
             }
             Spacer(modifier = Modifier.height(48.dp))
@@ -298,7 +299,7 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
                     Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
-                        .background(color = Color(0xFF1BD15D), shape = RoundedCornerShape(16.dp))
+                        .background(color = appColor, shape = RoundedCornerShape(16.dp))
                         .padding(16.dp)
                         .clickable {
                             addReminder(
@@ -318,6 +319,9 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
                     color = Color.White,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
+                    modifier = Modifier.clickable {
+                        goBack()
+                    }
                 )
             }
         }
@@ -345,7 +349,6 @@ fun ReminderAddScreenSkeleton(addReminder: (String, Int, String, Int, String, In
                     val minute = timePickerState.minute
                     val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
                     val currentMinute = calendar.get(Calendar.MINUTE)
-
                     time = convert24HourTo12Hour("$hour:$minute")
                     showTimePickerDialog = false
                 }) {

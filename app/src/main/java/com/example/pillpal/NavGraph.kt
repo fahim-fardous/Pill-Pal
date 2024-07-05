@@ -57,7 +57,7 @@ sealed class ReminderScreen(
 }
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Splash.route) {
         addSplashScreen(navController)
         addAuthScreen(navController)
@@ -69,7 +69,17 @@ fun MainScreen(navController: NavHostController) {
 private fun NavGraphBuilder.addSplashScreen(navController: NavHostController) {
     navigation(route = Screen.Splash.route, startDestination = SplashScreen.Splash.route) {
         composable(SplashScreen.Splash.route) {
-            SplashScreen()
+            SplashScreen(
+                gotoListScreen = {
+                    navController.navigate(
+                        ReminderScreen.ReminderList.route,
+                    ){
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
+                        }
+                    }
+                },
+            )
         }
     }
 }
@@ -100,8 +110,9 @@ private fun NavGraphBuilder.addReminderScreen(navController: NavHostController) 
             ReminderListScreen(
                 viewModel = viewModel,
                 gotoAddReminder = {
-                navController.navigate(ReminderScreen.ReminderAdd.route)
-            })
+                    navController.navigate(ReminderScreen.ReminderAdd.route)
+                },
+            )
         }
         composable(ReminderScreen.ReminderAdd.route) {
             val viewModel: ReminderAddViewModel = hiltViewModel()

@@ -23,9 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pillpal.R
 import com.example.pillpal.ui.theme.PillPalTheme
+import com.example.pillpal.ui.theme.appColor
 
 @Composable
-fun PlanCard(userName:String, completedPill:Int, totalPill:Int) {
+fun PlanCard(userName:String = "Fahim", completedPill:Int = 0, totalPill:Int) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(top = 8.dp, start = 32.dp)) {
             Text(
@@ -40,19 +41,19 @@ fun PlanCard(userName:String, completedPill:Int, totalPill:Int) {
                 Modifier
                     .fillMaxWidth()
                     .padding(top = 80.dp, start = 32.dp, end = 32.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFF3F6C8)),
+            colors = CardDefaults.cardColors(containerColor = appColor),
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(text = "Your plan", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Text(text = "for today", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                Text(text = "1 of 4 completed", fontSize = 10.sp, color = Color(0xFFA1A2A1))
+                Text(text = "1 of 4 completed", fontSize = 10.sp, color = Color.White)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Show More",
                     textDecoration = TextDecoration.Underline,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFEC7669),
+                    color = Color.Red,
                 )
             }
         }
