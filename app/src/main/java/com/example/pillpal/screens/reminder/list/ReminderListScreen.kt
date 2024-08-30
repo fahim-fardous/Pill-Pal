@@ -1,7 +1,6 @@
 package com.example.pillpal.screens.reminder.list
 
 import android.content.res.Configuration
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
@@ -39,12 +36,8 @@ import com.example.pillpal.components.Search
 import com.example.pillpal.models.Reminder
 import com.example.pillpal.ui.theme.PillPalTheme
 import com.example.pillpal.ui.theme.appColor
-import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun ReminderListScreen(
@@ -94,21 +87,22 @@ fun ReminderListScreenSkeleton(
                 onClick = {
                     gotoAddReminder()
                 },
-                containerColor = appColor
+                containerColor = appColor,
             ) {
                 Icon(
                     Icons.Filled.Add,
                     contentDescription = "Go to add",
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
-        }
+        },
     ) {
         Column(
-            modifier = Modifier
-                .padding(it)
-                .padding(top = 16.dp)
-                .fillMaxSize(),
+            modifier =
+                Modifier
+                    .padding(it)
+                    .padding(top = 16.dp)
+                    .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(32.dp))
@@ -126,13 +120,14 @@ fun ReminderListScreenSkeleton(
             Spacer(modifier = Modifier.height(32.dp))
             PlanCard(
                 userName = "Fahim",
-                completedPill = 2,
+                completedPill = reminders.filter { reminder -> reminder.status == "Completed" }.size,
                 totalPill = reminders.size,
             )
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
             ) {
                 Text(
                     text = "Daily Review",
@@ -159,14 +154,12 @@ fun ReminderListScreenSkeleton(
     }
 }
 
-
 fun getCurrentTime(reminderTime: String): String {
     val formatter = DateTimeFormatter.ofPattern("hh:mm a")
     val setTime = LocalTime.parse(reminderTime, formatter)
-    val currentTime = LocalTime.parse(LocalTime.now().format(formatter),formatter)
-    if(currentTime.isBefore(setTime)){
+    val currentTime = LocalTime.parse(LocalTime.now().format(formatter), formatter)
+    if (currentTime.isBefore(setTime)) {
         return "Pending"
     }
     return "Skipped"
-
 }

@@ -379,7 +379,6 @@ fun ReminderAddScreenSkeleton(
         }
     }
 }
-
 fun convert24HourTo12Hour(time24: String): String {
     // Define the input and output date formats
     val inputFormat = SimpleDateFormat("HH:mm")
@@ -391,3 +390,5 @@ fun convert24HourTo12Hour(time24: String): String {
     // Format the Date object to the desired output format
     return outputFormat.format(date)
 }
+
+
